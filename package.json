@@ -2,6 +2,7 @@
   "name": "miss",
   "version": "0.1.0",
   "private": true,
+  "homepage":"https://RedFoxAtAsleep.github.io/miss",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
