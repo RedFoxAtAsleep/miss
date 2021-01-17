@@ -1,17 +1,19 @@
-module.exports = {
-  configureWebpack: config => {
-    if (process.env.NODE_ENV === 'production') {
-      // 为生产环境修改配置...
-      if (process.env.BUILD_FOR_GHPAGE === 'on'){
-        return {
-          publicPath: '/miss/',
-          outputDir: 'dist',  // 相对于根目录
-        }
-      }
-      return {}
-    } else {
-      // 为开发环境修改配置...
-      return {}
-    }
+const config = {
+  'GHPAGE':{
+    publicPath: '/miss/',
+    outputDir: 'dist_for_ghpage',
+    //assetsDir:'assets',//静态资源目录(js,css,img,fonts)这些文件都可以写里面
+    lintOnSave:false,//是否开启eslint保存检测 ,它的有效值为 true || false || 'error'\
+  },
+  'DJANGO':{
+    // publicPath: '',
+    outputDir: 'dist_for_django',  // 相对于根目录
+    indexPath: 'templates/index.html',  // 相对于outputDir
+    assetsDir: 'static',  // 相对于outputDir，js、css、img、fonts
+  },
+  'HTMLPK':{
+    publicPath: './',
+    outputDir: 'dist_for_htmlpk',
   }
-}
+}  // GHPAGE DJANGO HTMLPK
+module.exports = config[process.env.BUILD_FOR]
