@@ -22,6 +22,12 @@ const config = {
     publicPath: './',
     outputDir: 'dist_for_htmlpk',
     lintOnSave:false,
+  },
+  'DEFAULT':{
+    publicPath: './',
+    outputDir: 'dist',
+    assetsDir: 'assets',
+    lintOnSave:false,
   }
 }  // GHPAGE DJANGO HTMLPK
 module.exports = config[process.env.BUILD_FOR]

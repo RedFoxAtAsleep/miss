@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <img src="./assets/logo.png">
+    <div><img src="./assets/logo.png"></div>
+    <div><img
+        src="./assets/cat_src_assets_used.jpg"
+        style="border: 5px solid rgba(255,255,255,1); border-radius: 20px;"
+    ></div>
     <div>
       <p>
         If Element is successfully added to this project, you'll see an
@@ -10,6 +14,9 @@
       <el-button>el-button</el-button>
     </div>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <router-link to="/about">Go to Foo</router-link>
+    <router-link to="/arcgis">Go to Bar</router-link>
+    <router-view></router-view>
   </div>
 </template>
 

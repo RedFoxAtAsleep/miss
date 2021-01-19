@@ -2,16 +2,18 @@
   "name": "miss",
   "version": "0.1.0",
   "private": true,
-  "homepage":"https://RedFoxAtAsleep.github.io/miss",
+  "homepage": "https://RedFoxAtAsleep.github.io/miss",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "copy": "ncp ./node_modules/@arcgis/core/assets ./public/assets"
   },
   "dependencies": {
     "@arcgis/core": "^4.18.1",
     "core-js": "^3.6.5",
     "element-ui": "^2.4.5",
+    "ncp": "^2.0.0",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
     "vuex": "^3.4.0"
