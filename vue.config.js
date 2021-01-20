@@ -24,7 +24,7 @@ const config = {
     lintOnSave:false,
   },
   'DEFAULT':{
-    publicPath: './',
+    publicPath: '/',
     outputDir: 'dist',
     assetsDir: 'assets',
     lintOnSave:false,
