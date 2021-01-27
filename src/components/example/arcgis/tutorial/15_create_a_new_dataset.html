@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script>
+        // You will learn: how to build an app that can interactively edit data in a feature layer.
+
+        // In order to successfully edit features with the Editor,
+        // you need to ensure: 1) the Enable Editing property is set to true for the feature layer;
+        // and 2) you or your application has to correct credentials to access and edit the layer. See the Create a new dataset tutorial to learn how to set these properties.
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/GraphicsLayer",
+            "esri/widgets/Sketch",
+        ], function(Map, MapView, GraphicsLayer, Sketch) {
+
+
+            var graphicsLayer = new GraphicsLayer();
+
+            var map = new Map({
+                basemap: "topo-vector",
+                //*** ADD ***//
+                layers: [graphicsLayer]
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-118.80500, 34.02700], // longitude, latitude
+                zoom: 13
+            });
+
+            var sketch = new Sketch({
+                view: view,
+                layer: graphicsLayer
+            });
+
+            // After the sketch is created
+            //*** Red stroke, 1px wide ***//
+            var stroke = {
+                color: [255,0,0],
+                width: 1
+            };
+
+            //*** White fill color with 50% transparency ***//
+            var fillColor = [255,255,255,.5];
+
+            //*** Override all of the default symbol colors and sizes ***//
+            var pointSymbol = sketch.viewModel.pointSymbol;
+            pointSymbol.color = fillColor;
+            pointSymbol.outline = stroke;
+            pointSymbol.size = 8;
+
+            var polylineSymbol = sketch.viewModel.polylineSymbol;
+            polylineSymbol.color = stroke.color;
+            polylineSymbol.width = stroke.width;
+
+            var polygonSymbol = sketch.viewModel.polygonSymbol;
+            polygonSymbol.color = fillColor;
+            polygonSymbol.outline = stroke;
+
+            view.ui.add(sketch, "top-right");
+
+            //*** ADD ***//
+            // 不起作用
+            // sketch.on("create", function(event) {
+            //     if (event.state === "complete") {
+            //         var attributes = {
+            //             name: "My Graphic",
+            //             type: event.graphic.geometry.type
+            //         };
+            //         event.graphic.attributes = attributes;
+            //
+            //         var popupTemplate = {
+            //             title: "{name}",
+            //             content: "I am a {type}."
+            //         };
+            //         event.graphic.popupTemplate = popupTemplate;
+            //     }
+            // });
+
+
+
+
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>

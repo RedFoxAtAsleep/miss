@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Intro to ImageryTileLayer | Sample | ArcGIS API for JavaScript 4.18
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.18/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.18/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      #rendererDiv {
+        padding: 10px;
+        width: 240px;
+      }
+
+      .slider {
+        height: 40px;
+        width: 100%;
+        background-color: transparent;
+      }
+    </style>
+    <script>
+      require([
+        "esri/Map",
+        "esri/views/MapView",
+        "esri/layers/ImageryTileLayer",
+        "esri/renderers/RasterStretchRenderer",
+        "esri/widgets/Slider",
+        "esri/tasks/support/AlgorithmicColorRamp"
+      ], function (
+        Map,
+        MapView,
+        ImageryTileLayer,
+        RasterStretchRenderer,
+        Slider,
+        AlgorithmicColorRamp
+      ) {
+        // initial stretch type for the rasterStretchRenderer
+        let stretchType = "standard-deviation";
+
+        // color ramp assigned to rasterStretchRenderer
+        let colorRamp = new AlgorithmicColorRamp({
+          algorithm: "lab-lch",
+          toColor: "#4C1815",
+          fromColor: "#A1A669"
+        });
+
+        // create a ImageryTileLayer from tiled elevation service
+        var layer = new ImageryTileLayer({
+          url:
+            "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Elevation/MtBaldy_Elevation/ImageServer",
+          opacity: 0.9
+        });
+
+        var map = new Map({
+          basemap: "topo-vector",
+          layers: [layer]
+        });
+
+        var view = new MapView({
+          container: "viewDiv",
+          map: map,
+          zoom: 10,
+          center: [-117.463, 34.306]
+        });
+
+        view.whenLayerView(layer).then(function () {
+          updateRenderer();
+        });
+
+        view.ui.add("rendererDiv", "top-right");
+
+        // This function is called when the layer view is loaded
+        // or when user changes the renderer settings from the UI
+        function updateRenderer() {
+          // clone the layer renderer
+          // layer's renderer needs to be cloned if it changes at runtime
+          var renderer = layer.renderer.clone();
+          renderer.colorRamp = colorRamp;
+          var bandStat = layer.rasterInfo.statistics[0];
+          renderer.stretchType = stretchType;
+          switch (stretchType) {
+            case "min-max":
+              renderer.statistics = [
+                {
+                  min: valueSlider.values[0],
+                  max: valueSlider.values[1],
+                  avg: bandStat.avg,
+                  stdev: bandStat.stddev
+                }
+              ];
+              break;
+            case "standard-deviation":
+              renderer.numberOfStandardDeviations = valueSlider.values[0];
+              renderer.statistics = [bandStat];
+              break;
+            case "percent-clip":
+              renderer.minPercent = valueSlider.values[0];
+              renderer.maxPercent = valueSlider.values[0];
+              break;
+          }
+          // apply the cloned renderer back to the layer's renderer
+          // changes will be immediate
+          layer.renderer = renderer;
+        }
+
+        const sliderLabel = document.getElementById("sliderLabel");
+        const stretchTypeSelect = document.getElementById("stretchType");
+
+        // listen to change event on stretchType dropdown
+        stretchTypeSelect.addEventListener("change", function () {
+          stretchType = stretchTypeSelect.value;
+          changeSliderValues(stretchType);
+        });
+
+        // This function is called when user selects a stretch type
+        // from the dropdown. It sets up raster stretch renderer
+        // parameters corresponding to the selected stretch renderer
+        function changeSliderValues(stretchType) {
+          sliderLabel.innerHTML = stretchType + " value:";
+          switch (stretchType) {
+            case "min-max":
+              // code block
+              valueSlider.max = 3068;
+              valueSlider.min = 116;
+              valueSlider.steps = 10;
+              valueSlider.values = [120, 3068];
+              break;
+            case "standard-deviation":
+              valueSlider.min = 1;
+              valueSlider.max = 3;
+              valueSlider.steps = 1;
+              valueSlider.values = [1];
+              break;
+            case "percent-clip":
+              valueSlider.min = 0;
+              valueSlider.max = 30;
+              valueSlider.steps = 1;
+              valueSlider.values = [2];
+              break;
+          }
+          updateRenderer();
+        }
+
+        // set up a new slider to change numeric values
+        // corresponding to the stretch renderer parameters
+        const valueSlider = new Slider({
+          container: "value-slider",
+          min: 1,
+          max: 3,
+          values: [1],
+          steps: 1,
+          snapOnClickEnabled: false,
+          visibleElements: {
+            labels: true,
+            rangeLabels: true
+          }
+        });
+
+        valueSlider.on(["thumb-change", "thumb-drag"], updateRenderer);
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="rendererDiv" class="esri-widget">
+      <h3 class="esri-widget__heading">Stretch Rendering Parameters</h3>
+
+      <label class="esri-feature-form__label">Select stretch type</label>
+      <select id="stretchType" class="esri-input esri-select">
+        <option value="standard-deviation" selected>standard deviation</option>
+        <option value="min-max">min-max</option>
+        <option value="percent-clip">percent-clip</option>
+      </select>
+      <br />
+      <label id="sliderLabel" class="esri-feature-form__label"
+        >standard deviation value:</label
+      >
+      <div id="value-slider" class="slider"></div>
+    </div>
+  </body>
+</html>

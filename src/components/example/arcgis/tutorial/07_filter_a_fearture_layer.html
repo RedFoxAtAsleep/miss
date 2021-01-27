@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        .container {
+            width: 100vw;
+            height: 100vh;
+            display: grid;
+            place-items: center;
+        }
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 80vh;
+            width: 80vw;
+        }
+    </style>
+    <script>
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/layers/FeatureLayer",
+            "esri/layers/GraphicsLayer",
+            "esri/Graphic",
+        ], function(Map, MapView, FeatureLayer, GraphicsLayer, Graphic) {
+
+            var map = new Map({
+                basemap: "topo-vector",
+            });
+            // ArcGIS Online hosts a wide variety of basemaps that you can use in your applications.
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-118.80500, 34.02700], // longitude, latitude
+                zoom: 13
+            });
+
+            var featureLayer = new FeatureLayer({
+                url: "https://services3.arcgis.com/GVgbJbqm8hXASVYi/arcgis/rest/services/Trails_Styled/FeatureServer/0",
+                outFields: ["*"], // Return all fields so it can be queried client-side
+                popupTemplate: {  // Enable a popup
+                    title: "{TRL_NAME}", // Show attribute value
+                    content: "The trail elevation gain is {ELEV_GAIN} ft."  // Display in pop-up
+                }
+            });
+
+            map.add(featureLayer);
+
+            function createSelectFilter(){
+                var sqlExpressions = ["TRL_ID = 0", "TRL_ID > 0",  "USE_BIKE = 'Yes'", "USE_BIKE = 'No'", "ELEV_GAIN < 1000", "ELEV_GAIN > 1000", "TRL_NAME = 'California Coastal Trail'"];
+
+                var selectFilter = document.createElement("select");
+                selectFilter.setAttribute("class", "esri-widget esri-select");
+                selectFilter.setAttribute("style", "width: 275px; font-family: Avenir Next W00; font-size: 1em;");
+
+                sqlExpressions.forEach(function(sql){
+                    var option = document.createElement("option");
+                    option.value = sql;
+                    option.innerHTML = sql;
+                    selectFilter.appendChild(option);
+                });
+
+                return selectFilter
+            }
+
+            selectFilterServer = createSelectFilter();
+            view.ui.add(selectFilterServer, "top-right");
+
+            // NOTE: Above, No filter has been applied so all of the data will be displayed.
+
+            // Apply a server-side filter
+            function setFeatureLayerFilter(expression) {
+                featureLayer.definitionExpression = expression;
+            }
+
+            selectFilterServer.addEventListener('change', function (event) {
+                setFeatureLayerFilter(event.target.value);
+            });
+
+
+            selectFilterClient = createSelectFilter();
+            view.ui.add(selectFilterClient, "top-right");
+
+            // Apply a client-side filter
+            function setFeatureLayerViewFilter(expression) {
+                view.whenLayerView(featureLayer).then(function(featureLayerView) {
+                    //*** UPDATE ***//
+                    // featureLayerView.filter = {
+                    //   where: expression
+                    // };
+                    featureLayerView.effect = {
+                        filter: {
+                            where: expression
+                        },
+                        excludedEffect: "opacity(70%)"
+                    }
+                });
+            }
+            selectFilterClient.addEventListener('change', function (event) {
+                // setFeatureLayerFilter(event.target.value);
+                setFeatureLayerViewFilter(event.target.value);
+            });
+
+            // Another form of filtering is to use the hitTest method on the view to find features at a given screen location.
+            var highlight;
+
+            view.whenLayerView(featureLayer).then(function(featureLayerView) {
+                view.on("pointer-move", function(event){
+                    view.hitTest(event).then(function(response){
+                        // Only return features for the feature layer
+                        var feature = response.results.filter(function (result) {
+                            return result.graphic.layer === featureLayer;
+                        })[0].graphic;
+                        // Disable highlighted feature before
+                        if (highlight) {
+                            highlight.remove();
+                        }
+                        // Highlight feature
+                        highlight = featureLayerView.highlight(feature);
+                    });
+                });
+            });
+        })
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div id="viewDiv"></div>
+    </div>
+    <div id="viewDivA"></div>
+    <div id="viewDivB"></div>
+</body>
+</html>

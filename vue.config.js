@@ -28,6 +28,13 @@ const config = {
     outputDir: 'dist',
     assetsDir: 'assets',
     lintOnSave:false,
+    pluginOptions: {
+      mock: {
+        entry: './mock/index.js',
+        debug: true,
+        disable: true,
+      },
+    },
   }
 }  // GHPAGE DJANGO HTMLPK
 module.exports = config[process.env.BUILD_FOR]

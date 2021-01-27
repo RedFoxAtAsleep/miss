@@ -6,6 +6,7 @@ import store from './store'
 import './plugins/element.js'
 import './plugins/highcharts'
 import './plugins/arcgis'
+import './api/mock'
 
 Vue.config.productionTip = false
 

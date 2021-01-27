@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script>
+        // https://developers.arcgis.com/labs/javascript/create-a-starter-app/
+
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/Basemap",
+            "esri/layers/VectorTileLayer",
+            "esri/layers/TileLayer"
+        ], function(Map, MapView, Basemap, VectorTileLayer, TileLayer) {
+
+            var basemap = new Basemap({
+                baseLayers: [
+                    //*** ADD ***//
+                    new TileLayer({
+                        portalItem: {
+                            id: "1b243539f4514b6ba35e7d995890db1d" // World Hillshade
+                        }
+                    }),
+                    new VectorTileLayer({
+                        portalItem: {
+                            id: "d2ff12395aeb45998c1b154e25d680e5" // Forest and Parks Canvas
+                        }
+                    }),
+                ]
+            });
+
+            var map = new Map({
+                // basemap: "topo-vector",
+                basemap: basemap,
+            });
+            // ArcGIS Online hosts a wide variety of basemaps that you can use in your applications.
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-118.80500, 34.02700], // longitude, latitude
+                zoom: 3
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>

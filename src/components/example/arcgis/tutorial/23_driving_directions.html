@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+        <style>
+         html, body, #viewDiv {
+             padding: 0;
+             margin: 0;
+             height: 90vh;
+             width: 90vw;
+         }
+        /* ADD */
+        .esri-view .esri-directions {
+            position: fixed;
+            right: 15px;
+        }
+        .esri-view .esri-component.esri-attribution {
+            position: fixed;
+        }
+    </style>
+    <script>
+        // https://developers.arcgis.com/labs/javascript/create-a-starter-app/
+
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/Directions",
+            "esri/symbols/SimpleMarkerSymbol",
+        ], function(Map, MapView, Directions, SimpleMarkerSymbol) {
+
+            var map = new Map({
+                //*** UPDATE ***//
+                basemap: "streets-navigation-vector"
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                //*** UPDATE ***//
+                center: [-118.24532,34.05398],
+                zoom: 12,
+                padding: {
+                    right: 320
+                }
+            });
+
+            var routeServiceUrl = "https://utility.arcgis.com/usrsvcs/appservices/V0mALcSRMYYxPYxW/rest/services/World/Route/NAServer/Route_World";
+            // NOTE: Ensure the URL doesn't contain /solve at the end. You just need to access the Route_World endpoint.
+            var directions = new Directions({
+                view: view,
+                //*** ADD ***/
+                routeServiceUrl: routeServiceUrl,
+            });
+            function createStopSymbol(color, size) {
+                return new SimpleMarkerSymbol({
+                    style: "simple-marker",
+                    size: size,
+                    outline: {
+                        width: "2px",
+                        color: "white"
+                    },
+                    color: color
+                });
+            }
+
+            // Stop symbols
+            directions.stopSymbols.first = createStopSymbol("green","14px");
+            directions.stopSymbols.middle = createStopSymbol("black","10px");
+            directions.stopSymbols.last = createStopSymbol("red","14px");
+
+            // Route symbol
+            directions.routeSymbol.width = "2";
+            directions.routeSymbol.color = [0, 0, 0, 0.75];
+            directions.routeSymbol.style = "short-dot";
+
+            view.ui.add(directions, "top-right");
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>

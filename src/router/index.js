@@ -3,11 +3,11 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import About from '@/views/About/'
 import Arcgis from '@/views/Arcgis'
-import HighchartIndex from "@/components/highcharts/Index";
 import AdminIndex from '@/views/admin/Index'
 import LeftNavigation from "@/views/admin/home/LeftNavigation";
 import RightWindow from "@/views/admin/home/RightWindow";
-
+import HighchartIndex from "@/components/example/highcharts/Index";
+import Count from "@/components/example/vuex/count";
 
 Vue.use(VueRouter)
 
@@ -23,11 +23,17 @@ const routes = [
     component: Home
   },
   {
+    path: '/vuex',
+    name: 'Vuex',
+    component: Count,
+  },
+  {
     path: '/about',
     name: 'About',
     // route level code-splitting
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
+    // component: import(/* webpackChunkName: "about" */ '../views/About.vue')
     component: About
   },
   {

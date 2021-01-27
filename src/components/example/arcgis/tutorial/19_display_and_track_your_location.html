@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script>
+        // https://developers.arcgis.com/labs/javascript/create-a-starter-app/
+
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/Locate",
+            "esri/widgets/Track",
+            "esri/Graphic",
+            "esri/widgets/Compass",
+        ], function(Map, MapView, Locate, Track, Graphic, Compass) {
+
+            var map = new Map({
+                //*** UPDATE ***//
+                basemap: "streets-navigation-vector"
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                //*** UPDATE ***//
+                center: [-40, 28],
+                zoom: 2
+            });
+
+            var locate = new Locate({
+                view: view,
+                useHeadingEnabled: false, // does not change the rotation of the map
+                goToOverride: function(view, options) {
+                    options.target.scale = 1500;  // Override the default map scale
+                    return view.goTo(options.target);
+                }
+            });
+
+            view.ui.add(locate, "top-left");
+
+            var track = new Track({
+                view: view,
+                graphic: new Graphic({
+                    symbol: {
+                        type: "simple-marker",
+                        size: "12px",
+                        color: "green",
+                        outline: {
+                            color: "#efefef",
+                            width: "1.5px"
+                        }
+                    }
+                }),
+                useHeadingEnabled: false  // Don't change orientation of the map
+            });
+
+            view.ui.add(track, "top-left");
+
+            var compass = new Compass({
+                view: view
+            });
+
+            view.ui.add(compass, "top-left");
+
+
+
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>

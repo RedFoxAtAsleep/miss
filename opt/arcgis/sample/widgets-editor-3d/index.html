@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>
+      Edit features in 3D with the Editor widget | Sample | ArcGIS API for
+      JavaScript 4.18
+    </title>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.18/esri/themes/light/main.css"
+    />
+    <script src="https://js.arcgis.com/4.18/"></script>
+
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      .esri-editor .esri-item-list__scroller {
+        max-height: 350px;
+      }
+
+      #snapping {
+        padding: 10px;
+      }
+
+      #snappingctrlkey {
+        display: inline;
+      }
+    </style>
+
+    <script>
+      require([
+        "esri/layers/FeatureLayer",
+        "esri/WebScene",
+        "esri/views/SceneView",
+        "esri/widgets/Editor"
+      ], function (FeatureLayer, WebScene, SceneView, Editor) {
+        // Create a map from the referenced webscene item id
+        let webscene = new WebScene({
+          portalItem: {
+            id: "206a6a13162c4d9a95ea6a87abad2437"
+          }
+        });
+        // Create a layer with visualVariables to use interactive handles for size and rotation
+        var recreationLayer = new FeatureLayer({
+          title: "Recreation",
+          url:
+            "https://services.arcgis.com/V6ZHFr6zdgNZuVG0/arcgis/rest/services/EditableFeatures3D/FeatureServer/1",
+          elevationInfo: {
+            mode: "absolute-height"
+          },
+          renderer: {
+            type: "unique-value", // autocasts as new UniqueValueRenderer()
+            field: "TYPE",
+            visualVariables: [
+              {
+                // size can be modified with the interactive handle
+                type: "size",
+                field: "SIZE",
+                axis: "height",
+                valueUnit: "meters"
+              },
+              {
+                // rotation can be modified with the interactive handle
+                type: "rotation",
+                field: "ROTATION"
+              }
+            ],
+            uniqueValueInfos: [
+              {
+                value: "1",
+                label: "Slide",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href:
+                          "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Slide.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Slide"
+                  }
+                }
+              },
+              {
+                value: "2",
+                label: "Swing",
+                symbol: {
+                  type: "point-3d", // autocasts as new PointSymbol3D()
+                  symbolLayers: [
+                    {
+                      type: "object",
+                      resource: {
+                        href:
+                          "https://static.arcgis.com/arcgis/styleItems/Recreation/gltf/resource/Swing.glb"
+                      }
+                    }
+                  ],
+                  styleOrigin: {
+                    styleName: "EsriRecreationStyle",
+                    name: "Swing"
+                  }
+                }
+              }
+            ]
+          }
+        });
+
+        webscene.add(recreationLayer);
+
+        var view = new SceneView({
+          container: "viewDiv",
+          qualityProfile: "high",
+          map: webscene
+        });
+
+        view.when(function () {
+          view.popup.autoOpenEnabled = false; //disable popups
+          // Create the Editor
+          var editor = new Editor({
+            view: view
+          });
+          // Add widget to top-right of the view
+          view.ui.add(editor, "top-right");
+
+          // Load the default value from the snapping checkbox
+          let snappingcheckboxsavedstate = document.getElementById(
+            "snappingcheckbox"
+          ).checked
+            ? true
+            : false;
+
+          // Set the snappingOptions.selfEnabled to the default state
+          editor.viewModel.sketchViewModel.snappingOptions = {
+            selfEnabled: snappingcheckboxsavedstate
+          };
+
+          // Checkbox to toggle the snapping on/off
+          document
+            .getElementById("snappingcheckbox")
+            .addEventListener("change", function (event) {
+              snappingcheckboxsavedstate = event.target.checked ? true : false;
+              editor.viewModel.sketchViewModel.snappingOptions.selfEnabled = snappingcheckboxsavedstate;
+            });
+
+          // Observe the if the CTRL-key got pressed to give the user a visual feedback
+          // The logic itself for toggling snapping is in the SketchViewModel
+          view.on(["key-down"], (ev) => {
+            if (ev.key === "Control") {
+              document.getElementById("snappingctrlkey").style.fontWeight =
+                "bold";
+              document.getElementById("snappingctrlkey").style.color = "red";
+              document.getElementById(
+                "snappingcheckbox"
+              ).checked = !snappingcheckboxsavedstate;
+            }
+          });
+          view.on(["key-up"], (ev) => {
+            if (ev.key === "Control") {
+              document.getElementById("snappingctrlkey").style.fontWeight =
+                "normal";
+              document.getElementById("snappingctrlkey").style.color = "black";
+              document.getElementById(
+                "snappingcheckbox"
+              ).checked = snappingcheckboxsavedstate;
+            }
+          });
+
+          // Add the snapping checkbox to the bottom-right of the view
+          view.ui.add("snapping", "bottom-right");
+        });
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="editorDiv"></div>
+    <div id="snapping" class="esri-widget">
+      <input type="checkbox" id="snappingcheckbox" />
+      <label id="snappinghint" for="snappingcheckbox"
+        >snapping (use
+        <span id="snappingctrlkey" for="snappingcheckbox">CTRL-key</span>
+        to toggle)</label
+      >
+    </div>
+  </body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script>
+        // https://developers.arcgis.com/labs/javascript/create-a-starter-app/
+
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/tasks/RouteTask",
+            "esri/tasks/support/RouteParameters",
+            "esri/tasks/support/FeatureSet",
+            "esri/Graphic",
+        ], function(Map, MapView,  RouteTask, RouteParameters, FeatureSet, Graphic) {
+
+            var map = new Map({
+                //*** UPDATE ***//
+                basemap: "streets-navigation-vector"
+            });
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                //*** UPDATE ***//
+                center: [-118.24532,34.05398],
+                zoom: 12
+            });
+
+            var routeTask = new RouteTask({
+                // authorization
+                // url: "https://route.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World",
+                // provent the authorization
+                url: "https://utility.arcgis.com/usrsvcs/appservices/V0mALcSRMYYxPYxW/rest/services/World/Route/NAServer/Route_World/solve"
+            });
+
+            view.on("click", function(event){
+                if (view.graphics.length === 0) {
+                    addGraphic("start", event.mapPoint);
+                } else if (view.graphics.length === 1) {
+                    addGraphic("finish", event.mapPoint);
+                    //*** ADD ***//
+                    getRoute();
+                } else {
+                    view.graphics.removeAll();
+                    addGraphic("start",event.mapPoint);
+                }
+            });
+
+            function addGraphic(type, point) {
+                var graphic = new Graphic({
+                    symbol: {
+                        type: "simple-marker",
+                        color: (type === "start") ? "white" : "black",
+                        size: "8px"
+                    },
+                    geometry: point
+                });
+                view.graphics.add(graphic);
+            }
+
+            function getRoute() {
+                // Setup the route parameters
+                var routeParams = new RouteParameters({
+                    stops: new FeatureSet({
+                        features: view.graphics.toArray() // Pass the array of graphics
+                    }),
+                    returnDirections: true
+                });
+                // Get the route
+                routeTask.solve(routeParams).then(function(data) {
+                    // Display the route
+                    data.routeResults.forEach(function(result) {
+                        result.route.symbol = {
+                            type: "simple-line",
+                            color: [5, 150, 255],
+                            width: 3
+                        };
+                        view.graphics.add(result.route);
+                    });
+
+                    //*** ADD ***//
+
+                    // Display the directions
+                    var directions = document.createElement("ol");
+                    directions.classList = "esri-widget esri-widget--panel esri-directions__scroller";
+                    directions.style.marginTop = 0;
+                    directions.style.paddingTop = "15px";
+
+                    // Show the directions
+                    var features = data.routeResults[0].directions.features;
+                    features.forEach(function(result,i){
+                        var direction = document.createElement("li");
+                        direction.innerHTML = result.attributes.text + " (" + result.attributes.length.toFixed(2) + " miles)";
+                        directions.appendChild(direction);
+                    });
+
+                    // Add directions to the view
+                    view.ui.empty("top-right");
+                    view.ui.add(directions, "top-right");
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>

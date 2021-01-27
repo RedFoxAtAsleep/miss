@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>OGCFeatureLayer | Sample | ArcGIS API for JavaScript 4.18</title>
+    <style>
+      html,
+      body,
+      #viewDiv {
+        padding: 0;
+        margin: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      #infoDiv {
+        position: absolute;
+        top: 15px;
+        left: 60px;
+      }
+
+      #infoDiv input {
+        border: none;
+        box-shadow: rgba(0, 0, 0, 0.3) 0px 1px 2px;
+      }
+    </style>
+
+    <link
+      rel="stylesheet"
+      href="https://js.arcgis.com/4.18/esri/themes/dark/main.css"
+    />
+    <script src="https://js.arcgis.com/4.18/"></script>
+
+    <script>
+      require([
+        "esri/views/MapView",
+        "esri/views/SceneView",
+        "esri/Map",
+        "esri/layers/OGCFeatureLayer",
+        "esri/layers/VectorTileLayer",
+        "esri/widgets/Legend"
+      ], function (
+        MapView,
+        SceneView,
+        Map,
+        OGCFeatureLayer,
+        VectorTileLayer,
+        Legend
+      ) {
+        // Create the OGCFeatureLayer
+        const sea_ice = new OGCFeatureLayer({
+          url:
+            "https://test.cubewerx.com/cubewerx/cubeserv/demo/ogcapi/Foundation/", // url to the OGC service
+          collectionId: "seaicea_1m", // unique id of the collection
+          // define rendering
+          renderer: {
+            type: "simple",
+            symbol: {
+              type: "simple-fill",
+              style: "solid",
+              color: "#F0F8FF",
+              outline: {
+                color: "white",
+                width: "0"
+              }
+            }
+          },
+          opacity: 0.6
+        });
+
+        // create map with custom basemap
+        const map = new Map({
+          basemap: "hybrid",
+          layers: [sea_ice] // add OGCFeatureLayer
+        });
+
+        // app configuration for switching between 2d and 3d
+        var switchButton = document.getElementById("switch-btn");
+        var appConfig = {
+          mapView: null,
+          sceneView: null,
+          activeView: null,
+          container: "viewDiv" // use same container for views
+        };
+
+        // set parameters for MapView or SceneView
+        var initialViewParams = {
+          zoom: 4,
+          center: [33, 68],
+          container: appConfig.container,
+          map: map,
+          popup: {
+            defaultPopupTemplateEnabled: true
+          }
+        };
+        // create 2D view and and set active
+        appConfig.mapView = createView(initialViewParams, "2d");
+        appConfig.activeView = appConfig.mapView;
+
+        // add legend
+        const legend = new Legend({
+          view: appConfig.activeView
+        });
+        appConfig.activeView.ui.add(legend, "bottom-left");
+
+        // create 3D view, won't initialize until container is set
+        initialViewParams.container = null;
+        appConfig.sceneView = createView(initialViewParams, "3d");
+        // switch the view between 2D and 3D each time the button is clicked
+        switchButton.addEventListener("click", function () {
+          switchView();
+        });
+        // Switches the view from 2D to 3D and vice versa
+        function switchView() {
+          var is3D = appConfig.activeView.type === "3d";
+          var activeViewpoint = appConfig.activeView.viewpoint.clone();
+          // remove the reference to the container for the previous view
+          appConfig.activeView.container = null;
+          if (is3D) {
+            // if the input view is a SceneView, set the viewpoint on the
+            // mapView instance. Set the container on the mapView and flag
+            // it as the active view
+            appConfig.mapView.viewpoint = activeViewpoint;
+            appConfig.mapView.container = appConfig.container;
+            appConfig.activeView = appConfig.mapView;
+            switchButton.value = "3D";
+          } else {
+            appConfig.sceneView.viewpoint = activeViewpoint;
+            appConfig.sceneView.container = appConfig.container;
+            appConfig.activeView = appConfig.sceneView;
+            switchButton.value = "2D";
+          }
+        }
+        // convenience function for creating a 2D or 3D view
+        function createView(params, type) {
+          var view;
+          var is2D = type === "2d";
+          if (is2D) {
+            view = new MapView(params);
+            return view;
+          } else {
+            view = new SceneView(params);
+          }
+          return view;
+        }
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="viewDiv"></div>
+    <div id="infoDiv">
+      <input
+        class="esri-component esri-widget--button esri-widget esri-interactive"
+        type="button"
+        id="switch-btn"
+        value="3D"
+      />
+    </div>
+  </body>
+</html>

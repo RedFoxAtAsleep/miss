@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>ArcGIS API for JavaScript Tutorials: Create a JavaScript starter app</title>
+    <link rel="stylesheet" href="https://js.arcgis.com/4.15/esri/themes/light/main.css">
+    <script src="https://js.arcgis.com/4.15/"></script>
+    <style>
+        html, body, #viewDiv {
+            padding: 0;
+            margin: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+    <script>
+
+        // You will learn: how to build an app to display the latitude and longitude, scale, and zoom level of the map.
+
+        // All widgets should use the esri-widget and esri-component css classes.
+        require([
+            "esri/Map",
+            "esri/views/MapView",
+            "esri/widgets/CoordinateConversion"
+        ], function(Map, MapView, CoordinateConversion) {
+
+            var map = new Map({
+                basemap: "topo-vector",
+            });
+            // ArcGIS Online hosts a wide variety of basemaps that you can use in your applications.
+
+            var view = new MapView({
+                container: "viewDiv",
+                map: map,
+                center: [-118.80500, 34.02700], // longitude, latitude
+                zoom: 13
+            });
+
+            var coordsWidget = document.createElement("div");
+            coordsWidget.id = "coordsWidget";
+            coordsWidget.className = "esri-widget esri-component";
+            coordsWidget.style.padding = "7px 15px 5px";
+
+            view.ui.add(coordsWidget, "bottom-right");
+
+            var coordinateConversionWidget = new CoordinateConversion({
+                view: view
+            });
+
+            view.ui.add(coordinateConversionWidget, "bottom-right");
+
+            //*** ADD ***//
+            function showCoordinates(pt) {
+                // var coords = "Lat/Lon " + pt.latitude.toFixed(3) + " " + pt.longitude.toFixed(3) +
+                //     " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+                //     " | Zoom " + view.zoom;
+                // coordsWidget.innerHTML = coords;
+
+                var coords = "Lat/Lon " + pt.x.toFixed(3) + " " + pt.y.toFixed(3) +
+                    " | Scale 1:" + Math.round(view.scale * 1) / 1 +
+                    " | Zoom " + view.zoom;
+                coordsWidget.innerHTML = coords;
+            }
+
+
+            view.watch("stationary", function(isStationary) {
+                showCoordinates(view.center);
+            });
+
+            view.on("pointer-move", function(evt) {
+                showCoordinates(view.toMap({ x: evt.x, y: evt.y }));
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+<div id="viewDiv"></div>
+</body>
+</html>
