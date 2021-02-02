@@ -1,16 +1,22 @@
 import requests from "./axios";
+import qs from 'qs'
 
-const apiStatus = {
-    'readIndexTree': {
+export const namedUrlPath = {
+    'indexTree': {
         'status': 'mock',
+        'example': '/indexTree/0/',
     },
 }
 
-export const readIndexTree = function (api, params, config){
-    let status = apiStatus['readIndexTree']['status'];
-    let request = requests[status];
-    
-    request.get(api, config);
+export const axiosGet = function (name='', urlPath='',params={}, config={}){
+    let status = namedUrlPath[name]['status'];
+    let request = requests[status]
+    // { data: {}, status: 200, statusText: 'OK', headers: {}, config: {}, request: {}}
+    return request.get(`${urlPath}?${qs.stringify(params)}`, config);
+}
+
+export default {
+    axiosGet
 }
 
 

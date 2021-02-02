@@ -1,4 +1,7 @@
 export default {
+    'selectedIndex': undefined,
     'indexTree': [],
-    'selected': ''
+    'indexTreeComplete': [],
+    'indices': {},
+    'route2index': {},
 };

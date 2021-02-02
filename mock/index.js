@@ -46,7 +46,7 @@ export default {
         // console.log(req.body);
         res.send({status: 'ok', message: 'update success！'});
     },
-    'PUT /api/index': (req, res) => {
+    'GET /api/index': (req, res) => {
         res.send({
             'code':200,
             'data':{
@@ -104,5 +104,4 @@ export default {
             }
         });
     },
-
 }

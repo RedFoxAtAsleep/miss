@@ -1,8 +1,8 @@
 import axios from 'axios'
-import options from "./config";
+import * as options from "./config";
 
 let reqMock = axios.create({
-    baseURL: options['base_url_production']
+    baseURL: options['base_url_mock']
 });
 
 let reqProduction = axios.create({
@@ -10,7 +10,7 @@ let reqProduction = axios.create({
 });
 
 let reqDevelopment = axios.create({
-    baseURL: options['base_url_production']
+    baseURL: options['base_url_development']
 });
 
 export default {

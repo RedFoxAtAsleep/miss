@@ -4,7 +4,8 @@ import state from './state'
 import * as getters from './getters'
 import * as actions from './actions'
 import * as mutations from './mutations'
-import count from './modules/count'
+import count from './modules/count.js'
+import index from './modules/index/index.js'
 
 Vue.use(Vuex)
 
@@ -15,7 +16,8 @@ export default new Vuex.Store({
     mutations: mutations,
     actions: actions,
     modules: {
-        count
+        count,
+        index
     },
 })
 

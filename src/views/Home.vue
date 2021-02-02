@@ -2,7 +2,6 @@
   <div class="home">
     <div>
       <img class="small_photo mirror_rotate_vertical" alt="Vue logo" src="../assets/logo.png">
-
     </div>
     <div>
       <img class="small_photo mirror_rotate_vertical" alt="Vue logo" src="../assets/logo.png">
@@ -19,6 +18,8 @@ import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'Home',
+  async created(){
+  },
   components: {
     HelloWorld
   }

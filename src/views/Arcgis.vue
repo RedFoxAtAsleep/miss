@@ -3,30 +3,40 @@
     <div id="mapview"></div>
   </div>
 </template>
-
 <script>
-  import Map from '@arcgis/core/Map';
-  import MapView from '@arcgis/core/views/MapView';
+import Map from '@arcgis/core/Map';
+import MapView from '@arcgis/core/views/MapView';
 
-  const initMap = () => {
-    const map = new Map({
-      basemap: 'topo-vector',  //
-    });
-    const view = new MapView({
-      container: 'mapview',
-      map: map,
-      center: [121.548935, 31.220142], // longitude, latitude
-      zoom: 10,
-    });
-  };
-
-  export default {
-    name: "Arcgis",
-    components: {},
-    mounted() {
-      initMap();
+export default {
+  name: "Arcgis",
+  data(){
+    return {
+      map: {},
+      view: {},
     }
+  },
+  methods:{
+    initMap: function() {
+      this.map = new Map({
+        basemap: 'topo-vector',  //
+      });
+      this.view = new MapView({
+        container: 'mapview',
+        map: this.map,
+        center: [121.548935, 31.220142], // longitude, latitude
+        zoom: 10,
+      });
+    }
+  },
+  components: {
+  },
+  created() {
+
+  },
+  mounted() {
+    this.initMap();
   }
+}
 </script>
 
 <style scoped>

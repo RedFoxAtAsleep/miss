@@ -1,14 +1,17 @@
 import Vue from 'vue'
 import './plugins/axios'
+import './plugins/util'
 import App from './App.vue'
 import router from './router'
 import store from './store'
 import './plugins/element.js'
 import './plugins/highcharts'
 import './plugins/arcgis'
-import './api/mock'
+import './api/index/mock.js'
+import api from './api/index.js'
 
-Vue.config.productionTip = false
+Vue.prototype.$api = api;
+Vue.config.productionTip = false;
 
 new Vue({
   router,

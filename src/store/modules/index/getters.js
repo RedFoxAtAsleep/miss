@@ -3,74 +3,33 @@
 // export const someGetter = (state, getter) => {}
 // export const someGetter = (state) => (x, y, z) => {}
 
-export const indexInfo = function({indexTree}){
-    function parseIndexTree(indexTree) {
-        const catalogOptionMeta = {
-            type: {default: 'node', type: 'string',},  // node link group
-            singleton: {default: true, type: 'boolean',},
-            weight: {default: 0, type: 'integer',},
-            show: {default: true, type: 'boolean',},
-            roles: {default: [], type: 'list',},
-            cache: {default: true, type: 'boolean',},
-            loaded: {default: false, type: 'boolean',},
-            children: {default: [], type: 'list',},
-            src: {default: '', type: 'string',},
-            icon: {default: '', type: 'string',},
-            uid: {default: '', type: 'string',},
-            path: {default: '', type: 'string',},
-        };
-        const indexWalker = function (indexTree, indexStack, indexNodes, indexGroups, route2node, catalogOptionMeta) {
-            for (let subTree of indexTree) {
-
-                indexStack.push(subTree['name']);
-                subTree['path'] = Object.assign([], indexStack);
-                subTree['uid'] = indexStack.join('-');
-
-                for (let option of Object.getOwnPropertyNames(catalogOptionMeta)) {
-                    if (!(option in subTree)) {
-                        subTree[option] = catalogOptionMeta[option]['default']
-                    }
-                }
-
-                subTree['icon'] = 'el-icon-s-promotion'
-                if (subTree['type'] === 'link') {
-                    subTree['icon'] = 'el-icon-link'
-                }
-                if (subTree['children'].length > 0) {
-                    subTree['icon'] = 'el-icon-menu'
-                }
-
-                if ('route' in subTree) {
-                    subTree['route']['uid'] = subTree['uid'];
-                    route2node[subTree['route']['name']] = subTree['uid']
-                }
-
-                if (subTree['children'].length === 0) {
-                    indexNodes[subTree['uid']] = Object.assign({}, subTree);
-                } else {
-                    subTree['type'] = 'group';
-                    indexGroups[subTree['uid']] = Object.assign({}, subTree);
-                    indexWalker(subTree['children'], indexStack, indexNodes, indexGroups, route2node, catalogOptionMeta);
-                }
-
-                indexStack.pop();
-            }
+export const loadedIndices = (state) => {
+    let objs = [];
+    let indices = state.indices;
+    for (let uid of Object.keys(indices)) {
+        if (indices[uid]['loaded'] === true) {
+            objs.push(indices[uid]);
         }
-
-        let indexStack = [];
-        let indexNodes = {};
-        let indexGroups = {};
-        let route2node = {};
-        let indexTreeComplete = Object.assign([], indexTree)
-        indexWalker(indexTreeComplete, indexStack, indexNodes, indexGroups, route2node, catalogOptionMeta);
-
-        return {
-            'indexTreeComplete': indexTreeComplete,
-            'indexNodes': indexNodes,
-            'indexGroups': indexGroups,
-            'route2node': route2node
-        }
-        // return [indexTreeComplete, indexNodes, indexGroups, route2node]
     }
-    return parseIndexTree(indexTree)
-};
+    // 新增或减少tab是会重新计算需要加载的tab
+    // 但是tmp的顺序并非是tab的先后顺序，而是Object.keys中的顺序
+    // init 场景 loadedIndices 从无到有
+
+    // activate 场景 loadedIndices 变多 交给activate动作select
+    // remove 场景 loadedIndices 变少 交给remove动作select
+    // select 场景 loadedIndices 不变
+    return objs
+}
+
+export const labels = (state) =>  {
+    if(state.selectedIndex === undefined){return []}
+    const items = state.selectedIndex['path'].filter((item)=>{return typeof item === 'string'});
+    console.log(items);
+    let labels = [];
+    for(let i=1;i<=items.length;i++){
+        let uid = items.slice(0,i).join('-');
+        labels.push(state.indices[uid]['label'])
+    }
+    return labels
+}
+
