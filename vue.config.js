@@ -8,7 +8,7 @@ const config = {
   'GHPAGE':{
     publicPath: '/miss/',
     outputDir: 'dist_for_ghpage',
-    //assetsDir:'assets',//静态资源目录(js,css,img,fonts)这些文件都可以写里面
+    assetsDir:'assets',//静态资源目录(js,css,img,fonts)这些文件都可以写里面
     lintOnSave:false,//是否开启eslint保存检测 ,它的有效值为 true || false || 'error'\
   },
   'DJANGO':{
@@ -20,6 +20,7 @@ const config = {
   },
   'HTMLPK':{
     publicPath: './',
+    assetsDir: 'assets',
     outputDir: 'dist_for_htmlpk',
     lintOnSave:false,
   },
