@@ -1,14 +1,13 @@
 <template>
-  <div>
-  </div>
+$END$
 </template>
 
 <script>
 export default {
-  name: "LeftNavigation"
+name: "UTabls"
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
