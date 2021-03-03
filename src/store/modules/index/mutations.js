@@ -21,7 +21,9 @@ export const setRoute2Index = (state, payload) => {
 }
 
 export const inverseLoaded = (state, payload) => {
-    state.indices[payload]['loaded'] = !state.indices[payload]['loaded'];
+    if(state.indices.hasOwnProperty(payload) && state.indices[payload].hasOwnProperty('loaded')){
+        state.indices[payload]['loaded'] = !state.indices[payload]['loaded'];
+    }
 }
 
 

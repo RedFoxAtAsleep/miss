@@ -3,11 +3,13 @@ import VueRouter from 'vue-router'
 import Home from '@/views/Home.vue'
 import About from '@/views/About/'
 import Arcgis from '@/views/Arcgis'
+import Cesium from '@/views/Cesium'
 import AdminIndex from '@/views/admin/Index'
 import AdminHomeIndex from '@/views/admin/home/Index'
 import HighchartIndex from "@/components/example/highcharts/Index";
 import Count from "@/components/example/vuex/count";
 import JsonEditor from "@/components/JsonEditor";
+import LoadGltf from "@/components/example/three/125/LoadGltf";
 
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
@@ -31,6 +33,11 @@ const routes = [
     path: '/json',
     name: 'Json',
     component: JsonEditor
+  },
+  {
+    path: '/three',
+    name: 'Three',
+    component: LoadGltf,
   },
   {
     path: '/vuex',
@@ -85,6 +92,11 @@ const routes = [
             path:'arcgis',
             name:'Admin_Home_Arcgis',
             component: Arcgis,
+          },
+          {
+            path:'cesium',
+            name:'Admin_Home_Cesium',
+            component: Cesium,
           },
         ]
       }

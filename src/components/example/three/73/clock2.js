@@ -31,8 +31,8 @@ function clock()
 			ctx.stroke();
 			ctx.restore();
 			}
-		};
-		function Line(){};
+		}
+		function Line(){}
 			Line.prototype = new canvObject();
 			Line.prototype.fill = false;
 			Line.prototype.start = [0,0];
@@ -44,7 +44,7 @@ function clock()
 			ctx.closePath();
 		};
 
-		function Circle(){};
+		function Circle(){}
 			Circle.prototype = new canvObject();
 			Circle.prototype.draw = function(ctx){
 			ctx.beginPath();

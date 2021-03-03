@@ -9411,7 +9411,7 @@ THREE.Geometry.prototype = {
 
 			}
 
-		};
+		}
 
 		if ( indices !== undefined ) {
 
@@ -12563,7 +12563,7 @@ THREE.KeyframeTrack.prototype = {
 		// this can not go higher than this.keys.length.
 		while( ( this.lastIndex < this.keys.length ) && ( time >= this.keys[this.lastIndex].time ) ) {
 			this.lastIndex ++;
-		};
+		}
 
 		// this can not go lower than 0.
 		while( ( this.lastIndex > 0 ) && ( time < this.keys[this.lastIndex - 1].time ) ) {
@@ -12657,7 +12657,7 @@ THREE.KeyframeTrack.prototype = {
 
 		// remove last keys first because it doesn't affect the position of the first keys (the otherway around doesn't work as easily)
 		if ( ( firstKeysToRemove + lastKeysToRemove ) > 0 ) {
-			this.keys = this.keys.splice( firstKeysToRemove, this.keys.length - lastKeysToRemove - firstKeysToRemove );;
+			this.keys = this.keys.splice( firstKeysToRemove, this.keys.length - lastKeysToRemove - firstKeysToRemove );
 		}
 
 		return this;
@@ -12799,7 +12799,7 @@ THREE.KeyframeTrack.GetTrackTypeForTypeName = function( typeName ) {
 
 	 	case "string":
 	 		return THREE.StringKeyframeTrack;
-	};
+	}
 
 	throw new Error( "Unsupported typeName: " + typeName );
 };
@@ -15234,7 +15234,7 @@ THREE.JSONLoader.prototype = {
 
 			}
 
-		};
+		}
 
 		function parseSkin() {
 
@@ -15279,7 +15279,7 @@ THREE.JSONLoader.prototype = {
 
 			}
 
-		};
+		}
 
 		function parseMorphing( scale ) {
 
@@ -15361,7 +15361,7 @@ THREE.JSONLoader.prototype = {
 
 			if ( outputAnimations.length > 0 ) geometry.animations = outputAnimations;
 
-		};
+		}
 
 		if ( json.materials === undefined || json.materials.length === 0 ) {
 
@@ -21738,7 +21738,7 @@ THREE.WebGLRenderer = function ( parameters ) {
 
 		properties.clear();
 
-	};
+	}
 
 	function onTextureDispose( event ) {
 

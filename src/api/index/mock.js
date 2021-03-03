@@ -3,10 +3,10 @@ const Mock = require('mockjs');
 const Random = Mock.Random; // 获取random对象，随机生成各种数据，具体请翻阅文档
 
 const urls = {
-    getIndexTree: /\/indexTree\/\w*\/.*/,
+    getIndexTree: /^\/mock\/indexTree\/\w*\/.*$/,
 }
 const getIndexTree = options => {
-    console.log('options', options);
+    console.log('getIndexTree options', options);
     return [
         {
             name: 'A',
@@ -18,6 +18,14 @@ const getIndexTree = options => {
                     loaded: false,
                     route: {
                         'name': 'Admin_Home_About'
+                    },
+                },
+                {
+                    name: 'AB',
+                    label: 'AB:NODE',
+                    loaded: false,
+                    route: {
+                        'name': 'Admin_Home_Cesium'
                     },
                 },
                 {
@@ -47,7 +55,8 @@ const getIndexTree = options => {
                             ],
                         }
                     ]
-                }]
+                },
+            ]
         },
         {
             name: 'B',
@@ -206,6 +215,10 @@ const getIndexTree = options => {
         },
     ]
 };
-Mock.mock(urls.indexTree, 'get', getIndexTree);
+const other = options => {
+    console.log('other options', options);
+};
+Mock.mock(urls.getIndexTree, 'get', getIndexTree);
+Mock.mock(urls.other, 'get', other);
 
 

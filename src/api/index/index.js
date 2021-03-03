@@ -1,5 +1,6 @@
 import requests from "./axios";
 import qs from 'qs'
+import './mock.js'
 
 export const namedUrlPath = {
     'indexTree': {
@@ -10,7 +11,7 @@ export const namedUrlPath = {
 
 export const axiosGet = function (name='', urlPath='',params={}, config={}){
     let status = namedUrlPath[name]['status'];
-    let request = requests[status]
+    let request = requests[status];
     // { data: {}, status: 200, statusText: 'OK', headers: {}, config: {}, request: {}}
     return request.get(`${urlPath}?${qs.stringify(params)}`, config);
 }

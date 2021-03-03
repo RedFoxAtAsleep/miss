@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import './plugins/axios'
 import './plugins/util'
 import App from './App.vue'
 import router from './router'
@@ -7,10 +6,9 @@ import store from './store'
 import './plugins/element.js'
 import './plugins/highcharts'
 import './plugins/arcgis'
-import './api/index/mock.js'
-import api from './api/index.js'
+import './plugins/cesium'
+import 'cesium/Widgets/widgets.css'
 
-Vue.prototype.$api = api;
 Vue.config.productionTip = false;
 
 new Vue({

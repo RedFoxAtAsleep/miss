@@ -1,6 +1,12 @@
 import indexAPI from './index/index.js'
+import staticAPI from './index/index.js'
 
 export const indexAxiosGet = async function (name, urlPath='', params={}, config={}) {
+    let axiosResponse = await indexAPI.axiosGet(name, urlPath, params, config)
+    return axiosResponse['data'];
+}
+
+export const staticAxiosGet = async function (name, urlPath='', params={}, config={}) {
     let axiosResponse = await indexAPI.axiosGet(name, urlPath, params, config)
     return axiosResponse['data'];
 }
@@ -21,6 +27,11 @@ export default {
         'axios': {
             'get': indexAxiosGet
         },
+    },
+    static:{
+        'axios': {
+            'get': staticAxiosGet
+        }
     },
     util: {
         obj2rows
