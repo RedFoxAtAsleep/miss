@@ -21,7 +21,7 @@ export default {
     },
     availWidth: function () {
       // return window.screen.availWidth + 'px';
-      return '1000px';
+      return '1200px';
     },
     window: function (){
       console.log({
