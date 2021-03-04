@@ -4,9 +4,7 @@
       <u-menu></u-menu>
     </div>
     <div class="right">
-      <div>
-        <u-tabs></u-tabs>
-      </div>
+      <u-tabs></u-tabs>
     </div>
   </div>
 </template>

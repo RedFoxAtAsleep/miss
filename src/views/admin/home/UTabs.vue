@@ -85,7 +85,8 @@ export default {
 .u-tabs {
 }
 
-.u-tabs .el-tabs--card {
+.u-tabs .el-tabs--card .el-breadcrumb{
+
 }
 
 .u-tabs .el-breadcrumb .el-breadcrumb__item {

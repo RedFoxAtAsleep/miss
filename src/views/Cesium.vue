@@ -1,15 +1,37 @@
 <template>
   <div>
-    <div id="cesiumContainer"></div>
+    <div id="cesiumContainer" :style="this.window"></div>
   </div>
 </template>
 
 <script>
+import api from "@/api";
+
 export default {
   name: "Cesium",
   data(){
     return {
       viewer: {},
+    }
+  },
+  computed:{
+    availHeight: function () {
+      // return window.screen.availHeight + 'px';
+      return '700px';
+    },
+    availWidth: function () {
+      // return window.screen.availWidth + 'px';
+      return '1000px';
+    },
+    window: function (){
+      console.log({
+        width: this.availWidth,
+        height: this.availHeight
+      })
+      return {
+        width: this.availWidth,
+        height: this.availHeight
+      }
     }
   },
   methods: {
@@ -47,10 +69,33 @@ export default {
   },
   mounted() {
     this.initViewer();
+  },
+  beforeRouteEnter(to, from, next) {
+    // 在渲染该组件的对应路由被 confirm 前调用
+    // 不！能！获取组件实例 `this`
+    // 因为当守卫执行前，组件实例还没被创建
+    console.log('beforeRouteEnter of cesium component', to, from);
+    // const iframe = document.getElementsByClassName('cesium-infoBox-iframe')[0];
+    // if(iframe){
+    //   iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
+    //   iframe.setAttribute("src", "");
+    // }
+    next(async function (vm) {
+      // 通过 `vm` 访问组件实例
+      // console.log(vm);
+      // const iframe = document.getElementsByClassName('cesium-infoBox-iframe')[0];
+      // if(iframe){
+      //   iframe.setAttribute('sandbox', 'allow-same-origin allow-scripts allow-popups allow-forms');
+      //   iframe.setAttribute("src", "");
+      // }
+    })
   }
 }
 </script>
 
-<style scoped>
-
+<style>
+div#cesiumContainer div.cesium-viewer div.cesium-viewer-cesiumWidgetContaine div.cesium-widget canvas{
+  width: 100%;
+  height: 100vh;
+}
 </style>
