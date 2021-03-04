@@ -7,7 +7,7 @@ import './plugins/element.js'
 import './plugins/highcharts'
 import './plugins/arcgis'
 import './plugins/cesium'
-import 'cesium/Widgets/widgets.css'
+// import 'cesium/Widgets/widgets.css'
 
 Vue.config.productionTip = false;
 

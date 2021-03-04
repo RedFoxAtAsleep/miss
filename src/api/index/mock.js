@@ -6,7 +6,7 @@ const urls = {
     getIndexTree: /^\/mock\/indexTree\/\w*\/.*$/,
 }
 const getIndexTree = options => {
-    console.log('getIndexTree options', options);
+    console.log('Index API getIndexTree options', options);
     return [
         {
             name: 'A',
@@ -216,9 +216,12 @@ const getIndexTree = options => {
     ]
 };
 const other = options => {
-    console.log('other options', options);
+    console.log('Index API other options', options);
 };
-Mock.mock(urls.getIndexTree, 'get', getIndexTree);
-Mock.mock(urls.other, 'get', other);
 
+Mock.mock(urls.getIndexTree, 'get', getIndexTree);
+// 一旦启用了mockjs就是默认拦截所有的请求
+// Mock.mock(urls.other, 'get', other);
+Mock.mock(undefined, 'get', other);
+// 所谓拦截部分请求，拦截后重新发出部分请求而已，也就是说mockjs只拦截一次
 
