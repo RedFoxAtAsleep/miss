@@ -4,7 +4,7 @@
       <div class="item" @click="go2admin">
         <img class="image" src="../../public/bird.gif"  alt="封面图" />
         <div class="article">
-          <div class="title">后台模板：左侧导航栏右侧标签页</div>
+          <div class="title">后台模板：左侧导航栏右侧标签页🔗</div>
           <div class="content"><br/><br/>
             试图搭建开箱即用的后台管理系统模板。基于Vue和Element实现。<br/>
             1.实现可以无限嵌套的导航栏，配置前端路由和组件、配置层级菜单和路由后，即可生成对应的嵌套菜单。<br/>
@@ -63,8 +63,14 @@ export default {
 .title {
   font-size: 30px;
   line-height: 30px;
+  color: #07689f;
   font-weight: bolder;
 }
+
+.title:hover {
+  color: #a2d5f2;
+}
+
 .content {
   font-size: 20px;
   line-height: 20px;
