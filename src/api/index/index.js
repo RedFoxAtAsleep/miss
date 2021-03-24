@@ -73,7 +73,7 @@ export const namedAPI = {
                         },
                         {
                             name: 'BB',
-                            label: 'BB:NODE',
+                            label: 'BB:LINK',
                             src: 'https://www.baidu.com',
                             type: 'link'
                         },
@@ -83,7 +83,7 @@ export const namedAPI = {
                             children: [
                                 {
                                     name: 'BCA',
-                                    label: 'BCA:NODE',
+                                    label: 'BCA:LINK',
                                     src: 'https://www.bing.com',
                                     type: 'link'
                                 },
@@ -93,7 +93,7 @@ export const namedAPI = {
                                     children: [
                                         {
                                             name: 'BCBA',
-                                            label: 'BCBA:NODE',
+                                            label: 'BCBA:LINK',
                                             src: '#/admin/home',
                                             type: 'link'
                                         },
