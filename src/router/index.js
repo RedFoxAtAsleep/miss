@@ -4,6 +4,7 @@ import Home from '@/views/Home.vue'
 import About from '@/views/About/'
 import Arcgis from '@/views/Arcgis'
 import Cesium from '@/views/Cesium'
+import Readme from '@/views/Readme'
 import AdminIndex from '@/views/admin/Index'
 import AdminHomeIndex from '@/views/admin/home/Index'
 import HighchartIndex from "@/components/example/highcharts/Index";
@@ -22,7 +23,12 @@ const routes = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/Home',
+    redirect: '/admin/home',
+  },
+  {
+    path: '/readme',
+    name: 'Readme',
+    component: Readme,
   },
   {
     path: '/home',

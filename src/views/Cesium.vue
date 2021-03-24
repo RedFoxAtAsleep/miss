@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="cesiumContainer" :style="this.window"></div>
+    <div id="cesiumContainer" style="width:1200px;height: 700px"></div>
   </div>
 </template>
 

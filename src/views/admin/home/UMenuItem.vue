@@ -68,6 +68,7 @@ export default {
       'setSelectedIndex',
     ]),
     activateTab(index) {
+      console.log(index);
       if(!equal(index, this.setSelectedIndex)){
         this.setSelectedIndex(index);
       }
