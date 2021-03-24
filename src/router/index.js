@@ -23,7 +23,7 @@ const routes = [
   {
     path: '/',
     name: 'Root',
-    redirect: '/admin/home',
+    redirect: '/readme',
   },
   {
     path: '/readme',
